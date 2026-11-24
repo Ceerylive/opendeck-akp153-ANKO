@@ -32,8 +32,11 @@ pub enum Kind {
     D15,
     TS115,
     STREONOR_S15,
+    CustomD15,
 }
 
+pub const CUSTOM_VID: u16 = 0x0100;
+pub const D15_CUSTOM_PID: u16 = 0x1008;
 pub const AJAZZ_VID: u16 = 0x0300;
 pub const MIRABOX_VID: u16 = 0x5548;
 pub const MIRABOX_2_VID: u16 = 0x6603;
@@ -70,6 +73,7 @@ pub const D15_PID: u16 = 0x1000;
 pub const TS115_PID: u16 = 0x1000;
 
 // Map all queries to usage page 65440 and usage id 1 for now
+pub const CUSTOM_D15_QUERY: DeviceQuery = DeviceQuery::new(65440, 1, CUSTOM_VID, D15_CUSTOM_PID);
 pub const HSV293S_QUERY: DeviceQuery = DeviceQuery::new(65440, 1, MIRABOX_VID, HSV293S_PID);
 pub const HSV293SV3_QUERY: DeviceQuery = DeviceQuery::new(65440, 1, MIRABOX_2_VID, HSV293SV3_PID);
 pub const HSV293SV3_1005_QUERY: DeviceQuery =
@@ -108,6 +112,7 @@ pub const QUERIES: [DeviceQuery; 17] = [
     TMICESC_QUERY,
     D15_QUERY,
     TS115_QUERY,
+    CUSTOM_D15_QUERY,
 ];
 
 /// Returns correct image format for device kind and key
@@ -145,7 +150,12 @@ impl Kind {
                 AKP153R_REV2_PID => Some(Kind::AKP153R_REV2),
                 _ => None,
             },
-
+            
+            CUSTOM_VID => match pid {
+                D15_CUSTOM_PID => Some(Kind::CustomD15),
+                _ => None,
+            },
+            
             MIRABOX_VID => match pid {
                 AKP153_PID => Some(Kind::AKP153),
                 HSV293S_PID => Some(Kind::HSV293S),
@@ -202,6 +212,7 @@ impl Kind {
     /// Returns protocol version for device
     pub fn protocol_version(&self) -> usize {
         match self {
+            Self::CustomD15 => 1,
             Self::HSV293SV3 => 3,
             Self::HSV293SV3_1005 => 3,
             Self::MSDONE_1005 => 3,
@@ -215,6 +226,7 @@ impl Kind {
     /// so we return custom names for all the kinds of devices
     pub fn human_name(&self) -> String {
         match &self {
+            Self::CustomD15 => "Custom 15-Key Stream Dock (0100:1008)",
             Self::HSV293S => "Mirabox HSV293S",
             Self::HSV293SV3 => "Mirabox HSV293SV3",
             Self::HSV293SV3_1005 => "Mirabox HSV293SV3",
@@ -240,6 +252,7 @@ impl Kind {
     /// two devices with the different revisions at the same time
     pub fn id_suffix(&self) -> String {
         match &self {
+            Self::CustomD15 => "CustomD15",
             Self::AKP153 => "153",
             Self::AKP153E => "153E",
             Self::AKP153R => "153R",

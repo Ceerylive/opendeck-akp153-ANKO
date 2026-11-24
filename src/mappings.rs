@@ -94,7 +94,7 @@ pub const TMICESC_QUERY: DeviceQuery = DeviceQuery::new(65440, 1, TMICE_VID, TMI
 pub const D15_QUERY: DeviceQuery = DeviceQuery::new(65440, 1, WOMIER_VID, D15_PID);
 pub const TS115_QUERY: DeviceQuery = DeviceQuery::new(65440, 1, MONSTARGEAR_VID, TS115_PID);
 
-pub const QUERIES: [DeviceQuery; 17] = [
+pub const QUERIES: [DeviceQuery; 18] = [
     HSV293S_QUERY,
     HSV293SV3_QUERY,
     HSV293SV3_1005_QUERY,
